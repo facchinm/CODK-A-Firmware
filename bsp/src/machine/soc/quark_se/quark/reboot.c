@@ -32,8 +32,46 @@
 #include "machine/soc/quark_se/quark/reboot.h"
 #include "machine.h"
 
+#define BOOT_TARGETS_POS            0x08
+#define BOOT_TARGETS_MASK           (0xFF << BOOT_TARGETS_POS)
+
+enum boot_targets {
+	TARGET_MAIN = 0x0,
+	TARGET_CHARGING,
+	TARGET_WIRELESS_CHARGING,
+	TARGET_RECOVERY,
+	TARGET_FLASHING,
+	TARGET_FACTORY,
+	TARGET_OTA,
+	TARGET_DTM,
+	TARGET_CERTIFICATION,
+	TARGET_RESERVED_0,
+	TARGET_APP_1,
+	TARGET_APP_2,
+	TARGET_RESERVED_1,
+	TARGET_RESERVED_2,
+	TARGET_RESERVED_3,
+	TARGET_RESERVED_4
+};
+
+#define SET_REBOOT_REG(addr,mask,pos,val)\
+    do {\
+           uint32_t reg = MMIO_REG_VAL_FROM_BASE (SCSS_REGISTER_BASE,addr) ; \
+           reg &= ~mask; \
+           reg |= val << pos; \
+           MMIO_REG_VAL_FROM_BASE (SCSS_REGISTER_BASE,addr) = (MMIO_REG_VAL_FROM_BASE(SCSS_REGISTER_BASE,addr) & ~mask) | reg; \
+       } while(0)
+
+
+
+void set_boot_target(enum boot_targets boot_target)
+{
+	SET_REBOOT_REG(SCSS_GPS0,BOOT_TARGETS_MASK,BOOT_TARGETS_POS,boot_target);
+}
+
 void reboot(void)
 {
+	set_boot_target(TARGET_FLASHING);
 	SCSS_REG_VAL(SCSS_SS_CFG) |= ARC_HALT_REQ_A;
 	SCSS_REG_VAL(SCSS_RSTC) = RSTC_WARM_RESET;
 }
