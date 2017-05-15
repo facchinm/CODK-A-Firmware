@@ -598,7 +598,7 @@ void main_task(void *param)
 			if (gpio_value == 0) {
 				pr_info(LOG_MODULE_MAIN, "GPIO_AON[0] - RESET triggered, rebooting");
 				log_flush();
-				reboot();
+				reboot_sketch();
 			}
 		}
 

@@ -76,6 +76,13 @@ void reboot(void)
 	SCSS_REG_VAL(SCSS_RSTC) = RSTC_WARM_RESET;
 }
 
+void reboot_sketch(void)
+{
+	set_boot_target(TARGET_MAIN);
+	SCSS_REG_VAL(SCSS_SS_CFG) |= ARC_HALT_REQ_A;
+	SCSS_REG_VAL(SCSS_RSTC) = RSTC_WARM_RESET;
+}
+
 void shutdown(void)
 {
 	SCSS_REG_VAL(SCSS_SS_CFG) |= ARC_HALT_REQ_A;

@@ -36,6 +36,10 @@
  */
 void reboot(void);
 
+/** \brief   Reboot device to sketch target
+ */
+void reboot_sketch(void);
+
 /** \brief   Shutdown device
  */
 void shutdown(void);
