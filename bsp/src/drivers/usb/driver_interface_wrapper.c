@@ -180,8 +180,9 @@ int usb_driver_init(uint32_t base_addr)
 
 	struct device * usbdev = get_device(USB_PM_ID);
 	assert(usbdev);
+#ifdef CONFIG_USB_PM
 	usb_pm_register_callback(usbdev, usb_plug_evt, NULL);
-
+#endif
 	usb_driver_os_dep->alloc = usb_alloc;
 	usb_driver_os_dep->free = usb_free;
 	usb_driver_os_dep->printk = usb_printk;
