@@ -19,11 +19,11 @@ config MACHINE_INCLUDE_PATH
 # Override the USB Product ID
 config USB_PRODUCT_ID
 	hex
-	default 0x0AB6
+	default 0x8051
 
 config USB_VENDOR_ID
 	hex
-	default 0x8087
+	default 0x2341
 
 config ARDUINO101_NO_DEBUG_PRINTS
 	bool "Disable debug prints on serial port on pins 0/1 of Arduino header"

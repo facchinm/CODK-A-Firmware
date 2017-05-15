@@ -51,8 +51,8 @@
 static usb_device_descriptor_t device_desc = {
 	.bLength = USB_DEVICE_DESCRIPTOR_SIZE,
 	.bDescriptorType = 0x01,
-	.bcdUSB[0] = 0x10,
-	.bcdUSB[1] = 0x01,
+	.bcdUSB[0] = 0x00,
+	.bcdUSB[1] = 0x02,
 	.bDeviceClass = CDC_CLASS,
 	.bDeviceSubClass = 0x00,
 	.bDeviceProtocol = 0x00,
@@ -168,7 +168,7 @@ static struct custom_config_descriptor config_desc = {
 		.bConfigurationValue = 1,
 		.iConfiguration = 0,
 		.bmAttributes = UC_BUS_POWERED | UC_SELF_POWERED,
-		.bMaxPower = 250,	/* max current in 2mA units */
+		.bMaxPower = 50,	/* max current in 2mA units */
 		},
 	.comm_interface = {
 		.bLength = USB_INTERFACE_DESCRIPTOR_SIZE,
