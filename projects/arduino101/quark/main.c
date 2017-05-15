@@ -149,9 +149,9 @@ static volatile  int32_t acm_rx_data;
  *  acm_open == 1 => a serial client is listening at the other end
  *  acm_open == 0 => nobody listens us => drop data */
 static volatile int acm_open = 0;
-static int baud_rate;
-static uint32_t reboot_timeout;
-static int reboot_pending;
+static volatile int baud_rate;
+static volatile uint32_t reboot_timeout;
+static volatile int reboot_pending;
 
 static usb_string_descriptor_t strings[] = {
       {
@@ -305,8 +305,13 @@ void acm_event(int event, int param)
 					break;
 				case ACM_CTRL_CTS:
 				case ACM_CTRL_DISC:
-					acm_tx_state = ACM_TX_DISABLED;
-					cdc_acm_buffers.host_open = false;
+					if (!reboot_pending) {
+						acm_tx_state = ACM_TX_DISABLED;
+						cdc_acm_buffers.host_open = false;
+					} else {
+						// Do it now, so if we are stuck in the loop we can be free
+						reboot();
+					}
 					break;
 				default:
 					pr_warning(LOG_MODULE_MAIN,
@@ -495,7 +500,7 @@ void main_task(void *param)
 
 #ifdef CONFIG_USB_ACM
 	pr_info(LOG_MODULE_MAIN, "Calling usb_acm_class_init()");
-        usb_register_function_driver(usb_acm_class_init, NULL, strings);
+	usb_register_function_driver(usb_acm_class_init, NULL, strings);
 	acm_init(0, acm_event);
 //	acm_set_comm_state(0, 0x3f);
 #endif
